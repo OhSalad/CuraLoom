@@ -34,7 +34,7 @@ data class AddFeedUiState(
 )
 
 class AddFeedViewModel(application: Application) : AndroidViewModel(application) {
-    private val db = DatabaseHelper.getInstance(application)
+    private val feedService = DatabaseHelper.getInstance(application).feedService
 
     var uiState by mutableStateOf(AddFeedUiState())
         private set
@@ -91,7 +91,7 @@ class AddFeedViewModel(application: Application) : AndroidViewModel(application)
             author = authorFromUrl(uiState.url)
             isNew = true
         }
-        return if (db.insertFeed(feed) != -1L) AddFeedResult.ADDED else AddFeedResult.EXISTS
+        return if (feedService.insertFeed(feed) != -1L) AddFeedResult.ADDED else AddFeedResult.EXISTS
     }
 
     fun addFeedsFromCommaSeparatedInput(): MultiAddResult {
@@ -120,7 +120,7 @@ class AddFeedViewModel(application: Application) : AndroidViewModel(application)
                 author = authorFromUrl(rawUrl)
                 isNew = true
             }
-            val inserted = db.insertFeed(feed) != -1L
+            val inserted = feedService.insertFeed(feed) != -1L
             if (inserted) added++ else exists++
         }
 

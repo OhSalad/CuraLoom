@@ -71,12 +71,18 @@ class EpisodeViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun playEpisode(episode: Episode) {
+        if (playbackState.value.episodeId == episode.id) {
+            player.togglePlayPause()
+            return
+        }
+
         val feedTitle = uiState.feed?.title.orEmpty()
         player.play(
             episodeId = episode.id,
             episodeTitle = episode.title,
             feedTitle = feedTitle,
-            audioUrl = episode.audioUrl
+            audioUrl = episode.audioUrl,
+            startPositionMs = episode.lastPositionMs
         )
         repository.markEpisodePlayed(episode.id)
         reloadEpisodes()

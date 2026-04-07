@@ -9,7 +9,8 @@ interface PodcastPlayer {
         episodeId: Long,
         episodeTitle: String,
         feedTitle: String,
-        audioUrl: String?
+        audioUrl: String?,
+        startPositionMs: Long = 0L
     )
 
     fun togglePlayPause()

@@ -14,8 +14,8 @@ data class SettingsUiState(
 )
 
 class SettingsViewModel(application: Application) : AndroidViewModel(application) {
-    private val db = DatabaseHelper.getInstance(application)
-    var uiState by mutableStateOf(SettingsUiState(feedCount = db.getFeedCount()))
+    private val feedService = DatabaseHelper.getInstance(application).feedService
+    var uiState by mutableStateOf(SettingsUiState(feedCount = feedService.getFeedCount()))
         private set
 
     fun toggleNewEpisodes(value: Boolean) {
@@ -27,6 +27,6 @@ class SettingsViewModel(application: Application) : AndroidViewModel(application
     }
 
     fun refreshStorage() {
-        uiState = uiState.copy(feedCount = db.getFeedCount())
+        uiState = uiState.copy(feedCount = feedService.getFeedCount())
     }
 }

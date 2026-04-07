@@ -7,8 +7,10 @@ import com.pmu.mobileapp.model.LibraryEpisode
 interface PodcastRepository {
     fun getFeedById(feedId: Long): Feed?
     fun getEpisodesByFeedId(feedId: Long): List<Episode>
+    fun getEpisodeById(episodeId: Long): Episode?
     fun getLibraryEpisodes(): List<LibraryEpisode>
     fun markEpisodePlayed(episodeId: Long)
+    fun updateEpisodePlaybackPosition(episodeId: Long, positionMs: Long)
     fun syncFeed(feedId: Long): FeedSyncResult
 }
 

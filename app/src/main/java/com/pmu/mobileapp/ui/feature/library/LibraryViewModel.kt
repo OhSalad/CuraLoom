@@ -39,11 +39,17 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun playEpisode(item: LibraryEpisode) {
+        if (playbackState.value.episodeId == item.id) {
+            player.togglePlayPause()
+            return
+        }
+
         player.play(
             episodeId = item.id,
             episodeTitle = item.title,
             feedTitle = item.feedTitle,
-            audioUrl = item.audioUrl
+            audioUrl = item.audioUrl,
+            startPositionMs = item.lastPositionMs
         )
         repository.markEpisodePlayed(item.id)
         reload()

@@ -25,7 +25,7 @@ data class HomeUiState(
 )
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    private val db = DatabaseHelper.getInstance(application)
+    private val feedService = DatabaseHelper.getInstance(application).feedService
     private val repository = (application as CuraLoomApp).podcastRepository
 
     var uiState by mutableStateOf(HomeUiState())
@@ -68,7 +68,7 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
             cancelRename()
             return
         }
-        db.updateFeed(target.id, title, target.category)
+        feedService.updateFeed(target.id, title, target.category)
         uiState = uiState.copy(renameTarget = null, renameText = "")
         reload()
     }
@@ -88,22 +88,22 @@ class HomeViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun deleteFeed(feed: Feed) {
-        db.deleteFeed(feed.id)
+        feedService.deleteFeed(feed.id)
         uiState = uiState.copy(menuFeedId = -1L)
         reload()
     }
 
     private fun reload() {
-        val categories = db.getAllCategories()
+        val categories = feedService.getAllCategories()
         val feeds = if (uiState.query.isBlank()) {
-            db.getAllFeeds(if (uiState.selectedCategory == "All") null else uiState.selectedCategory)
+            feedService.getAllFeeds(if (uiState.selectedCategory == "All") null else uiState.selectedCategory)
         } else {
-            db.searchFeeds(uiState.query)
+            feedService.searchFeeds(uiState.query)
         }
         uiState = uiState.copy(
             categories = categories,
             feeds = feeds,
-            feedCount = db.getFeedCount()
+            feedCount = feedService.getFeedCount()
         )
     }
 }

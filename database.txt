@@ -1,0 +1,31 @@
+// Use DBML to define your database structure
+// Source: app/src/main/java/com/pmu/mobileapp/data/DatabaseHelper.kt
+
+Table feeds {
+  id integer [pk, increment]
+  title text [not null]
+  url text [not null, unique]
+  description text
+  category text [default: 'General']
+  image_url text
+  author text
+  is_new integer [default: 1, note: 'Stored as 0/1']
+  added_at text [default: `datetime('now')`]
+  last_refreshed text [default: `datetime('now')`]
+}
+
+Table episodes {
+  id integer [pk, increment]
+  feed_id integer [not null]
+  title text [not null]
+  description text
+  pub_date text
+  duration text
+  audio_url text
+  is_played integer [default: 0, note: 'Stored as 0/1']
+  is_downloaded integer [default: 0, note: 'Stored as 0/1']
+  is_new integer [default: 1, note: 'Stored as 0/1']
+  last_position_ms integer [default: 0]
+}
+
+Ref: episodes.feed_id > feeds.id [delete: cascade]

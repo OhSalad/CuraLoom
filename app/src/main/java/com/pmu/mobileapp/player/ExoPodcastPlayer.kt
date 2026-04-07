@@ -3,16 +3,24 @@ package com.pmu.mobileapp.player
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.media3.common.AudioAttributes
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
+import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class ExoPodcastPlayer(context: Context) : PodcastPlayer {
-    private val exoPlayer = ExoPlayer.Builder(context.applicationContext).build()
+    private val httpDataSourceFactory = DefaultHttpDataSource.Factory()
+        .setUserAgent("CuraLoom/1.0")
+        .setAllowCrossProtocolRedirects(true)
+    private val exoPlayer = ExoPlayer.Builder(context.applicationContext)
+        .setMediaSourceFactory(DefaultMediaSourceFactory(httpDataSourceFactory))
+        .build()
     private val _playbackState = MutableStateFlow(PlaybackState())
     private val progressHandler = Handler(Looper.getMainLooper())
     private val progressTicker = object : Runnable {
@@ -30,6 +38,8 @@ class ExoPodcastPlayer(context: Context) : PodcastPlayer {
     private var lastVolumeBeforeMute: Float = 1f
 
     init {
+        exoPlayer.setAudioAttributes(AudioAttributes.DEFAULT, true)
+
         exoPlayer.addListener(
             object : Player.Listener {
                 override fun onPlaybackStateChanged(playbackState: Int) {
@@ -63,6 +73,8 @@ class ExoPodcastPlayer(context: Context) : PodcastPlayer {
                 }
 
                 override fun onPlayerError(error: PlaybackException) {
+                    stopProgressTicker()
+                    exoPlayer.playWhenReady = false
                     _playbackState.value = _playbackState.value.copy(
                         status = PlaybackStatus.ERROR,
                         isPlaying = false
@@ -72,7 +84,13 @@ class ExoPodcastPlayer(context: Context) : PodcastPlayer {
         )
     }
 
-    override fun play(episodeId: Long, episodeTitle: String, feedTitle: String, audioUrl: String?) {
+    override fun play(
+        episodeId: Long,
+        episodeTitle: String,
+        feedTitle: String,
+        audioUrl: String?,
+        startPositionMs: Long
+    ) {
         if (audioUrl.isNullOrBlank()) {
             _playbackState.value = PlaybackState(
                 episodeId = episodeId,
@@ -89,9 +107,26 @@ class ExoPodcastPlayer(context: Context) : PodcastPlayer {
         val sameEpisode = _playbackState.value.episodeId == episodeId
         val sameUrl = currentAudioUrl == audioUrl
         if (sameEpisode && sameUrl) {
-            if (exoPlayer.isPlaying) {
-                exoPlayer.pause()
-            } else {
+            val hasPreparedMedia = exoPlayer.currentMediaItem != null && exoPlayer.playbackState != Player.STATE_IDLE
+            if (!hasPreparedMedia) {
+                exoPlayer.setMediaItem(MediaItem.fromUri(audioUrl))
+                exoPlayer.prepare()
+                val resumePosition = startPositionMs.coerceAtLeast(0L)
+                if (resumePosition > 0L) {
+                    exoPlayer.seekTo(resumePosition)
+                }
+            } else if (exoPlayer.playbackState == Player.STATE_ENDED) {
+                exoPlayer.seekTo(0L)
+            } else if (startPositionMs > 0L && !exoPlayer.isPlaying) {
+                val boundedResume = if (exoPlayer.duration > 0L) {
+                    startPositionMs.coerceIn(0L, exoPlayer.duration)
+                } else {
+                    startPositionMs.coerceAtLeast(0L)
+                }
+                exoPlayer.seekTo(boundedResume)
+            }
+            if (!exoPlayer.isPlaying) {
+                exoPlayer.playWhenReady = true
                 exoPlayer.play()
             }
             return
@@ -107,7 +142,12 @@ class ExoPodcastPlayer(context: Context) : PodcastPlayer {
         )
         exoPlayer.setMediaItem(MediaItem.fromUri(audioUrl))
         exoPlayer.prepare()
+        val resumePosition = startPositionMs.coerceAtLeast(0L)
+        if (resumePosition > 0L) {
+            exoPlayer.seekTo(resumePosition)
+        }
         exoPlayer.playWhenReady = true
+        exoPlayer.play()
     }
 
     override fun togglePlayPause() {

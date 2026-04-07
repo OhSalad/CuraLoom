@@ -11,6 +11,7 @@ class Episode {
     var isPlayed: Boolean = false
     var isDownloaded: Boolean = false
     var isNew: Boolean = true
+    var lastPositionMs: Long = 0L
 
     constructor()
 
