@@ -45,9 +45,17 @@ class DatabaseHelper private constructor(context: Context) :
 
         db.execSQL(createFeedsTable)
         db.execSQL(createEpisodesTable)
+        seedDefaultFeeds(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
+        if (oldVersion < 6) {
+            db.execSQL("DROP TABLE IF EXISTS $TABLE_EPISODES")
+            db.execSQL("DROP TABLE IF EXISTS $TABLE_FEEDS")
+            onCreate(db)
+            return
+        }
+
         if (oldVersion < 2) {
             removePlaceholderFeeds(db)
         }
@@ -101,6 +109,17 @@ class DatabaseHelper private constructor(context: Context) :
         }
     }
 
+    private fun seedDefaultFeeds(db: SQLiteDatabase) {
+        DefaultPodcastFeeds.starterFeeds.forEach { feed ->
+            db.execSQL(
+                "INSERT OR IGNORE INTO $TABLE_FEEDS (" +
+                    "$FEED_TITLE, $FEED_URL, $FEED_DESCRIPTION, $FEED_CATEGORY, $FEED_AUTHOR, $FEED_IS_NEW" +
+                    ") VALUES (?, ?, ?, ?, ?, 1)",
+                arrayOf(feed.title, feed.url, feed.description, feed.category, feed.author)
+            )
+        }
+    }
+
     fun <T> withTransaction(block: (SQLiteDatabase) -> T): T {
         val db = writableDatabase
         db.beginTransaction()
@@ -115,7 +134,7 @@ class DatabaseHelper private constructor(context: Context) :
 
     companion object {
         private const val DATABASE_NAME = "curaloom.db"
-        private const val DATABASE_VERSION = 5
+        private const val DATABASE_VERSION = 6
 
         const val TABLE_FEEDS = "feeds"
         const val FEED_ID = "id"

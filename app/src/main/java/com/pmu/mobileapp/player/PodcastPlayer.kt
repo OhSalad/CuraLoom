@@ -18,6 +18,7 @@ interface PodcastPlayer {
     fun seekBy(deltaMs: Long)
     fun toggleMute()
     fun decreaseVolume()
+    fun increaseVolume()
     fun pause()
     fun stop()
     fun release()

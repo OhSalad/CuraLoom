@@ -11,6 +11,10 @@
     <string name="collections_followed">%1$d collections followed</string>
     <string name="category_all">All</string>
     <string name="discover_coming_soon">Discovery is coming soon.</string>
+    <string name="discover_title">Discover</string>
+    <string name="discover_subtitle">Follow a curated audio RSS feed and CuraLoom will sync playable episodes.</string>
+    <string name="feed_followed">%1$s added to your library.</string>
+    <string name="following_syncing">Syncing</string>
     <string name="view_episodes">View episodes</string>
     <string name="rename_feed">Rename feed</string>
     <string name="refresh_feed">Refresh timestamp</string>
@@ -41,10 +45,15 @@
     <string name="share_via">Share via</string>
     <string name="now_playing">Now playing: %1$s</string>
     <string name="now_playing_title">Now Playing</string>
+    <string name="no_audio">No audio</string>
+    <string name="no_audio_available">This RSS item does not include playable audio.</string>
     <string name="episodes_count">%1$d episodes</string>
     <string name="seek_back_10">Back 10 seconds</string>
     <string name="seek_forward_10">Forward 10 seconds</string>
     <string name="volume_down">Decrease volume</string>
+    <string name="volume_up">Increase volume</string>
+    <string name="mute_audio">Mute audio</string>
+    <string name="unmute_audio">Unmute audio</string>
     <string name="toggle_mute">Mute or unmute</string>
     <string name="mini_player_paused">Ready offline</string>
     <string name="played">Played</string>

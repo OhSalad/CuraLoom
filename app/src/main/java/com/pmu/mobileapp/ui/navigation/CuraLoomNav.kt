@@ -17,6 +17,7 @@ import androidx.navigation.navArgument
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pmu.mobileapp.CuraLoomApp
 import com.pmu.mobileapp.ui.feature.add.AddFeedScreen
+import com.pmu.mobileapp.ui.feature.discover.DiscoverScreen
 import com.pmu.mobileapp.ui.feature.episodes.EpisodeScreen
 import com.pmu.mobileapp.ui.feature.home.HomeScreen
 import com.pmu.mobileapp.ui.feature.library.LibraryScreen
@@ -27,6 +28,7 @@ import com.pmu.mobileapp.ui.components.MiniNowPlayingBar
 private object Routes {
     const val Splash = "splash"
     const val Home = "home"
+    const val Discover = "discover"
     const val Add = "add"
     const val Library = "library"
     const val Settings = "settings"
@@ -45,6 +47,7 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
     val currentRoute = backStackEntry?.destination?.route
     val hasBottomNavigation = currentRoute in setOf(
         Routes.Home,
+        Routes.Discover,
         Routes.Library,
         Routes.Settings,
         Routes.Episodes
@@ -62,12 +65,22 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
                     onAddFeed = { nav.navigate(Routes.Add) },
                     onOpenFeed = { nav.navigate(Routes.episodes(it)) },
                     onOpenLibrary = { nav.navigate(Routes.Library) },
-                    onOpenSettings = { nav.navigate(Routes.Settings) }
+                    onOpenSettings = { nav.navigate(Routes.Settings) },
+                    onOpenDiscover = { nav.navigate(Routes.Discover) }
+                )
+            }
+            composable(Routes.Discover) {
+                DiscoverScreen(
+                    onGoHome = { nav.navigate(Routes.Home) },
+                    onOpenLibrary = { nav.navigate(Routes.Library) },
+                    onOpenSettings = { nav.navigate(Routes.Settings) },
+                    onOpenFeed = { nav.navigate(Routes.episodes(it)) }
                 )
             }
             composable(Routes.Library) {
                 LibraryScreen(
                     onGoHome = { nav.navigate(Routes.Home) },
+                    onOpenDiscover = { nav.navigate(Routes.Discover) },
                     onOpenSettings = { nav.navigate(Routes.Settings) },
                     onOpenFeed = { nav.navigate(Routes.episodes(it)) }
                 )
@@ -81,6 +94,7 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
                     onDarkModeChange = onDarkModeChange,
                     onBack = { nav.popBackStack() },
                     onGoHome = { nav.navigate(Routes.Home) },
+                    onOpenDiscover = { nav.navigate(Routes.Discover) },
                     onOpenLibrary = { nav.navigate(Routes.Library) }
                 )
             }
@@ -93,6 +107,7 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
                     onBack = { nav.popBackStack() },
                     onOpenSettings = { nav.navigate(Routes.Settings) },
                     onGoHome = { nav.navigate(Routes.Home) },
+                    onOpenDiscover = { nav.navigate(Routes.Discover) },
                     onOpenLibrary = { nav.navigate(Routes.Library) }
                 )
             }
@@ -112,7 +127,8 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
                 onTogglePlayPause = { app.podcastPlayer.togglePlayPause() },
                 onSeekTo = { app.podcastPlayer.seekTo(it) },
                 onToggleMute = { app.podcastPlayer.toggleMute() },
-                onDecreaseVolume = { app.podcastPlayer.decreaseVolume() }
+                onDecreaseVolume = { app.podcastPlayer.decreaseVolume() },
+                onIncreaseVolume = { app.podcastPlayer.increaseVolume() }
             )
         }
     }

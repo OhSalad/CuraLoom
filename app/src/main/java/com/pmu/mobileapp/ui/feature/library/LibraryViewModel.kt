@@ -39,6 +39,8 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun playEpisode(item: LibraryEpisode) {
+        if (item.audioUrl.isNullOrBlank()) return
+
         if (playbackState.value.episodeId == item.id) {
             player.togglePlayPause()
             return

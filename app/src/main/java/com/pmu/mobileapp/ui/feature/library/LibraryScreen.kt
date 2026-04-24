@@ -42,6 +42,7 @@ import com.pmu.mobileapp.player.PlaybackStatus
 @Composable
 fun LibraryScreen(
     onGoHome: () -> Unit,
+    onOpenDiscover: () -> Unit,
     onOpenSettings: () -> Unit,
     onOpenFeed: (Long) -> Unit,
     vm: LibraryViewModel = viewModel()
@@ -54,6 +55,7 @@ fun LibraryScreen(
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(selected = false, onClick = onGoHome, icon = { Icon(Icons.Default.Home, null) }, label = { Text(stringResource(R.string.home)) })
+                NavigationBarItem(selected = false, onClick = onOpenDiscover, icon = { Icon(Icons.Default.PlayArrow, null) }, label = { Text(stringResource(R.string.discover)) })
                 NavigationBarItem(selected = true, onClick = {}, icon = { Icon(Icons.Default.LibraryMusic, null) }, label = { Text(stringResource(R.string.manage_library)) })
                 NavigationBarItem(selected = false, onClick = onOpenSettings, icon = { Icon(Icons.Default.Settings, null) }, label = { Text(stringResource(R.string.settings)) })
             }
@@ -93,19 +95,27 @@ private fun LibraryEpisodeCard(
     onPlay: () -> Unit,
     onOpenFeed: () -> Unit
 ) {
+    val hasAudio = !item.audioUrl.isNullOrBlank()
+
     Card(Modifier.fillMaxWidth()) {
         Column(Modifier.padding(12.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             Text(item.title, fontWeight = FontWeight.SemiBold)
             Text(item.feedTitle)
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                Text(item.duration ?: "")
+                Text(item.duration ?: if (hasAudio) "" else stringResource(R.string.no_audio))
                 TextButtonAction(text = stringResource(R.string.view_feed), onClick = onOpenFeed)
             }
-            Button(onClick = onPlay) {
+            Button(onClick = onPlay, enabled = hasAudio) {
                 val showPause = isCurrent && isPlaying
                 Icon(if (showPause) Icons.Default.Pause else Icons.Default.PlayArrow, null)
                 Spacer(Modifier.width(4.dp))
-                Text(if (showPause) stringResource(R.string.pause_episode) else stringResource(R.string.play_episode))
+                Text(
+                    when {
+                        !hasAudio -> stringResource(R.string.no_audio)
+                        showPause -> stringResource(R.string.pause_episode)
+                        else -> stringResource(R.string.play_episode)
+                    }
+                )
             }
         }
     }

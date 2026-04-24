@@ -92,15 +92,6 @@ class ExoPodcastPlayer(context: Context) : PodcastPlayer {
         startPositionMs: Long
     ) {
         if (audioUrl.isNullOrBlank()) {
-            _playbackState.value = PlaybackState(
-                episodeId = episodeId,
-                episodeTitle = episodeTitle,
-                feedTitle = feedTitle,
-                status = PlaybackStatus.ERROR,
-                isPlaying = false,
-                volume = exoPlayer.volume,
-                isMuted = exoPlayer.volume <= 0.001f
-            )
             return
         }
 
@@ -188,6 +179,15 @@ class ExoPodcastPlayer(context: Context) : PodcastPlayer {
             return
         }
         val next = (current - 0.1f).coerceAtLeast(0f)
+        exoPlayer.volume = next
+        if (next > 0f) {
+            lastVolumeBeforeMute = next
+        }
+        publishProgressState()
+    }
+
+    override fun increaseVolume() {
+        val next = (exoPlayer.volume + 0.1f).coerceAtMost(1f)
         exoPlayer.volume = next
         if (next > 0f) {
             lastVolumeBeforeMute = next

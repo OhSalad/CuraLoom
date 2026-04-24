@@ -55,6 +55,7 @@ fun HomeScreen(
     onOpenFeed: (Long) -> Unit,
     onOpenLibrary: () -> Unit,
     onOpenSettings: () -> Unit,
+    onOpenDiscover: () -> Unit,
     vm: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -86,7 +87,7 @@ fun HomeScreen(
             HomeBottomBar(
                 onOpenLibrary = onOpenLibrary,
                 onOpenSettings = onOpenSettings,
-                onDiscover = { Toast.makeText(context, context.getString(R.string.discover_coming_soon), Toast.LENGTH_SHORT).show() }
+                onDiscover = onOpenDiscover
             )
         },
         floatingActionButton = { IconButton(onClick = onAddFeed) { Icon(Icons.Default.Add, stringResource(R.string.add_feed_title)) } }

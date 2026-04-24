@@ -54,6 +54,7 @@ fun EpisodeScreen(
     onBack: () -> Unit,
     onOpenSettings: () -> Unit,
     onGoHome: () -> Unit,
+    onOpenDiscover: () -> Unit,
     onOpenLibrary: () -> Unit,
     vm: EpisodeViewModel = viewModel()
 ) {
@@ -102,6 +103,7 @@ fun EpisodeScreen(
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(selected = false, onClick = onGoHome, icon = { Icon(Icons.Default.Home, null) }, label = { Text(stringResource(R.string.home)) })
+                NavigationBarItem(selected = false, onClick = onOpenDiscover, icon = { Icon(Icons.Default.PlayArrow, null) }, label = { Text(stringResource(R.string.discover)) })
                 NavigationBarItem(selected = true, onClick = onOpenLibrary, icon = { Icon(Icons.Default.LibraryMusic, null) }, label = { Text(stringResource(R.string.manage_library)) })
                 NavigationBarItem(selected = false, onClick = onOpenSettings, icon = { Icon(Icons.Default.Settings, null) }, label = { Text(stringResource(R.string.settings)) })
             }
@@ -114,8 +116,12 @@ fun EpisodeScreen(
             playbackStatus = playback.status,
             onFilterSelected = vm::setFilter,
             onPlayEpisode = {
-                vm.playEpisode(it)
-                Toast.makeText(context, context.getString(R.string.now_playing, it.title), Toast.LENGTH_SHORT).show()
+                if (it.audioUrl.isNullOrBlank()) {
+                    Toast.makeText(context, context.getString(R.string.no_audio_available), Toast.LENGTH_SHORT).show()
+                } else {
+                    vm.playEpisode(it)
+                    Toast.makeText(context, context.getString(R.string.now_playing, it.title), Toast.LENGTH_SHORT).show()
+                }
             }
         )
     }
@@ -165,6 +171,7 @@ private fun EpisodeContent(
             items(state.episodes, key = { it.id }) { episode ->
                 val isCurrentEpisode = playbackEpisodeId == episode.id
                 val showPause = isCurrentEpisode && playbackStatus == PlaybackStatus.PLAYING
+                val hasAudio = !episode.audioUrl.isNullOrBlank()
                 Card(Modifier.fillMaxWidth()) {
                     Row(
                         Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
@@ -177,10 +184,16 @@ private fun EpisodeContent(
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis
                             )
-                            Text(episode.duration ?: "", style = MaterialTheme.typography.bodySmall)
+                            Text(
+                                episode.duration ?: if (hasAudio) "" else stringResource(R.string.no_audio),
+                                style = MaterialTheme.typography.bodySmall
+                            )
                         }
                         Spacer(Modifier.width(8.dp))
-                        IconButton(onClick = { onPlayEpisode(episode) }) {
+                        IconButton(
+                            enabled = hasAudio,
+                            onClick = { onPlayEpisode(episode) }
+                        ) {
                             Icon(if (showPause) Icons.Default.Pause else Icons.Default.PlayArrow, null)
                         }
                     }

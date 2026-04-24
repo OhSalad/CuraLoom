@@ -14,6 +14,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -46,6 +47,7 @@ fun SettingsScreen(
     onDarkModeChange: (Boolean) -> Unit,
     onBack: () -> Unit,
     onGoHome: () -> Unit,
+    onOpenDiscover: () -> Unit,
     onOpenLibrary: () -> Unit,
     vm: SettingsViewModel = viewModel()
     ) {
@@ -63,6 +65,7 @@ fun SettingsScreen(
         bottomBar = {
             NavigationBar {
                 NavigationBarItem(selected = false, onClick = onGoHome, icon = { Icon(Icons.Default.Home, null) }, label = { Text(stringResource(R.string.home)) })
+                NavigationBarItem(selected = false, onClick = onOpenDiscover, icon = { Icon(Icons.Default.PlayArrow, null) }, label = { Text(stringResource(R.string.discover)) })
                 NavigationBarItem(selected = false, onClick = onOpenLibrary, icon = { Icon(Icons.Default.LibraryMusic, null) }, label = { Text(stringResource(R.string.manage_library)) })
                 NavigationBarItem(selected = true, onClick = {}, icon = { Icon(Icons.Default.Settings, null) }, label = { Text(stringResource(R.string.settings)) })
             }
@@ -76,6 +79,13 @@ fun SettingsScreen(
             verticalArrangement = Arrangement.spacedBy(12.dp)
         ) {
             Text(stringResource(R.string.settings_subtitle))
+            LanguageSwitchCard(
+                isArabic = isArabic,
+                onToggle = {
+                    LocaleHelper.setLocale(context, if (isArabic) "en" else "ar")
+                    (context as? ComponentActivity)?.recreate()
+                }
+            )
             ToggleRow(stringResource(R.string.dark_mode), stringResource(R.string.dark_mode_caption), darkMode) {
                 onDarkModeChange(it)
                 Toast.makeText(
@@ -84,13 +94,6 @@ fun SettingsScreen(
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            LanguageSwitchCard(
-                isArabic = isArabic,
-                onToggle = {
-                    LocaleHelper.setLocale(context, if (isArabic) "en" else "ar")
-                    (context as? ComponentActivity)?.recreate()
-                }
-            )
             ToggleRow(
                 stringResource(R.string.new_episode_alerts),
                 stringResource(R.string.new_episode_alerts_caption),

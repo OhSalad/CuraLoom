@@ -25,7 +25,7 @@ object RssFeedImporter {
         val first = download(feedUrl)
         val rssUrl = discoverRssUrl(first, feedUrl)
         val xmlResponse = if (rssUrl == first.finalUrl) first else download(rssUrl)
-        val parsed = parseFeedXml(xmlResponse.body, feedId)
+        val parsed = parseFeedXml(xmlResponse.body, feedId, xmlResponse.finalUrl)
         return ImportedFeedData(
             resolvedUrl = xmlResponse.finalUrl,
             title = parsed.title,
@@ -105,7 +105,7 @@ object RssFeedImporter {
         }
     }
 
-    private fun parseFeedXml(xml: String, feedId: Long): ParsedFeedXml {
+    private fun parseFeedXml(xml: String, feedId: Long, sourceUrl: String): ParsedFeedXml {
         val builderFactory = DocumentBuilderFactory.newInstance().apply {
             isNamespaceAware = false
             isIgnoringComments = true
@@ -116,13 +116,13 @@ object RssFeedImporter {
         val rootName = root.tagName.lowercase()
 
         return if (rootName == "feed") {
-            parseAtom(root, feedId)
+            parseAtom(root, feedId, sourceUrl)
         } else {
-            parseRss(document.documentElement, feedId)
+            parseRss(document.documentElement, feedId, sourceUrl)
         }
     }
 
-    private fun parseRss(root: Element, feedId: Long): ParsedFeedXml {
+    private fun parseRss(root: Element, feedId: Long, sourceUrl: String): ParsedFeedXml {
         val channel = root.getElementsByTagName("channel").item(0) as? Element ?: root
         val title = textOfFirst(channel, "title")
         val description = textOfFirst(channel, "description")
@@ -134,7 +134,8 @@ object RssFeedImporter {
                 val episodeTitle = textOfFirst(item, "title") ?: continue
                 val enclosure = (item.getElementsByTagName("enclosure").item(0) as? Element)?.getAttribute("url")
                 val mediaContent = (item.getElementsByTagName("media:content").item(0) as? Element)?.getAttribute("url")
-                val audioUrl = enclosure?.ifBlank { null } ?: mediaContent?.ifBlank { null }
+                val audioUrl = (enclosure?.ifBlank { null } ?: mediaContent?.ifBlank { null })
+                    ?.let { resolveUrl(sourceUrl, it) }
                 add(
                     Episode().apply {
                         this.feedId = feedId
@@ -151,7 +152,7 @@ object RssFeedImporter {
         return ParsedFeedXml(title = title, description = description, author = author, episodes = episodes)
     }
 
-    private fun parseAtom(root: Element, feedId: Long): ParsedFeedXml {
+    private fun parseAtom(root: Element, feedId: Long, sourceUrl: String): ParsedFeedXml {
         val title = textOfFirst(root, "title")
         val description = textOfFirst(root, "subtitle")
         val authorNode = root.getElementsByTagName("author").item(0) as? Element
@@ -170,7 +171,7 @@ object RssFeedImporter {
                     val href = link.getAttribute("href")
                     if (href.isBlank()) continue
                     if (type.startsWith("audio/") || rel.equals("enclosure", ignoreCase = true)) {
-                        audioUrl = href
+                        audioUrl = resolveUrl(sourceUrl, href)
                         break
                     }
                 }

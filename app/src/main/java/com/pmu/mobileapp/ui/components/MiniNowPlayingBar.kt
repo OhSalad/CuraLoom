@@ -9,7 +9,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Slider
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.VolumeDown
+import androidx.compose.material.icons.automirrored.filled.VolumeMute
 import androidx.compose.material.icons.automirrored.filled.VolumeOff
+import androidx.compose.material.icons.automirrored.filled.VolumeUp
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material3.Card
@@ -39,7 +41,8 @@ fun MiniNowPlayingBar(
     onTogglePlayPause: () -> Unit,
     onSeekTo: (Long) -> Unit,
     onToggleMute: () -> Unit,
-    onDecreaseVolume: () -> Unit
+    onDecreaseVolume: () -> Unit,
+    onIncreaseVolume: () -> Unit
 ) {
     val progress = if (playback.durationMs > 0L) {
         (playback.positionMs.toFloat() / playback.durationMs.toFloat()).coerceIn(0f, 1f)
@@ -73,9 +76,12 @@ fun MiniNowPlayingBar(
                     }
                     IconButton(onClick = onToggleMute) {
                         Icon(
-                            imageVector = if (playback.isMuted) Icons.AutoMirrored.Filled.VolumeOff else Icons.AutoMirrored.Filled.VolumeDown,
-                            contentDescription = stringResource(R.string.toggle_mute)
+                            imageVector = if (playback.isMuted) Icons.AutoMirrored.Filled.VolumeOff else Icons.AutoMirrored.Filled.VolumeMute,
+                            contentDescription = if (playback.isMuted) stringResource(R.string.unmute_audio) else stringResource(R.string.mute_audio)
                         )
+                    }
+                    IconButton(onClick = onIncreaseVolume) {
+                        Icon(Icons.AutoMirrored.Filled.VolumeUp, contentDescription = stringResource(R.string.volume_up))
                     }
                     IconButton(onClick = onTogglePlayPause) {
                         Icon(

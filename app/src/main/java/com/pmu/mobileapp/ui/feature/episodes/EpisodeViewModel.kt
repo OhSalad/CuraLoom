@@ -71,6 +71,8 @@ class EpisodeViewModel(application: Application) : AndroidViewModel(application)
     }
 
     fun playEpisode(episode: Episode) {
+        if (episode.audioUrl.isNullOrBlank()) return
+
         if (playbackState.value.episodeId == episode.id) {
             player.togglePlayPause()
             return

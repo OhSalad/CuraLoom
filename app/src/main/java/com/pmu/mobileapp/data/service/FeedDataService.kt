@@ -52,6 +52,17 @@ class FeedDataService(
         }
     }
 
+    fun getFeedByUrl(url: String): Feed? {
+        val db = dbHelper.readableDatabase
+        val cursor = db.rawQuery(
+            "SELECT * FROM ${DatabaseHelper.TABLE_FEEDS} WHERE ${DatabaseHelper.FEED_URL} = ?",
+            arrayOf(url)
+        )
+        cursor.use {
+            return if (it.moveToFirst()) it.toFeed() else null
+        }
+    }
+
     fun getFeedCount(): Int {
         val db = dbHelper.readableDatabase
         val cursor = db.rawQuery("SELECT COUNT(*) FROM ${DatabaseHelper.TABLE_FEEDS}", null)
