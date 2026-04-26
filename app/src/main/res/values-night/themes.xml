@@ -13,9 +13,4 @@
         <item name="colorOnSurface">@color/on_surface</item>
         <item name="colorError">@color/error</item>
     </style>
-
-    <style name="Theme.CuraLoom.Splash" parent="Theme.CuraLoom">
-        <item name="android:windowIsTranslucent">false</item>
-        <item name="android:windowFullscreen">true</item>
-    </style>
 </resources>

@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.pmu.mobileapp.CuraLoomApp
-import com.pmu.mobileapp.data.DatabaseHelper
 import com.pmu.mobileapp.data.DefaultPodcastFeed
 import com.pmu.mobileapp.data.DefaultPodcastFeeds
 import com.pmu.mobileapp.model.Feed
@@ -24,7 +23,7 @@ data class DiscoverUiState(
 
 class DiscoverViewModel(application: Application) : AndroidViewModel(application) {
     private val app = application as CuraLoomApp
-    private val feedService = DatabaseHelper.getInstance(application).feedService
+    private val feedService = app.appContainer.feedService
     private val repository = app.podcastRepository
 
     var uiState by mutableStateOf(DiscoverUiState())
@@ -51,7 +50,10 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
             return
         }
 
-        uiState = uiState.copy(syncingUrls = uiState.syncingUrls + feed.url)
+        uiState = uiState.copy(
+            followedUrls = uiState.followedUrls + feed.url,
+            syncingUrls = uiState.syncingUrls + feed.url
+        )
         viewModelScope.launch {
             val insertedFeedId = withContext(Dispatchers.IO) {
                 feedService.insertFeed(
@@ -76,7 +78,7 @@ class DiscoverViewModel(application: Application) : AndroidViewModel(application
                 feedService.getAllFeeds(null).map { it.url }.toSet()
             }
             uiState = uiState.copy(
-                followedUrls = followedUrls,
+                followedUrls = followedUrls + feed.url,
                 syncingUrls = uiState.syncingUrls - feed.url,
                 lastFollowedTitle = feed.title
             )

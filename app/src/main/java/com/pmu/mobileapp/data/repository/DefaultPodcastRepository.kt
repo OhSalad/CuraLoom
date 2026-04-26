@@ -1,6 +1,5 @@
 package com.pmu.mobileapp.data.repository
 
-import com.pmu.mobileapp.data.DatabaseHelper
 import com.pmu.mobileapp.data.rss.RssFeedImporter
 import com.pmu.mobileapp.data.service.EpisodeDataService
 import com.pmu.mobileapp.data.service.FeedDataService
@@ -10,7 +9,6 @@ import com.pmu.mobileapp.model.Feed
 import com.pmu.mobileapp.model.LibraryEpisode
 
 class DefaultPodcastRepository(
-    private val dbHelper: DatabaseHelper,
     private val feedService: FeedDataService,
     private val episodeService: EpisodeDataService,
     private val libraryService: LibraryDataService
@@ -38,17 +36,13 @@ class DefaultPodcastRepository(
         )
         return try {
             val imported = RssFeedImporter.import(feedId = feedId, feedUrl = feed.url)
-            dbHelper.withTransaction { db ->
-                feedService.updateFeedFromImport(
-                    db = db,
-                    id = feedId,
-                    title = imported.title,
-                    description = imported.description,
-                    author = imported.author,
-                    resolvedUrl = imported.resolvedUrl
-                )
-                episodeService.replaceEpisodesForFeed(db, feedId, imported.episodes)
-            }
+            feedService.updateFeedFromImport(
+                id = feedId,
+                title = imported.title,
+                description = imported.description,
+                author = imported.author
+            )
+            episodeService.replaceEpisodesForFeed(feedId, imported.episodes)
             FeedSyncResult(success = true, importedEpisodes = imported.episodes.size)
         } catch (e: Exception) {
             FeedSyncResult(success = false, errorMessage = e.message ?: "Unable to sync feed")

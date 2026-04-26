@@ -9,7 +9,6 @@ class Episode {
     var duration: String? = null
     var audioUrl: String? = null
     var isPlayed: Boolean = false
-    var isDownloaded: Boolean = false
     var isNew: Boolean = true
     var lastPositionMs: Long = 0L
 

@@ -1,8 +1,7 @@
 package com.pmu.mobileapp
 
 import android.app.Application
-import com.pmu.mobileapp.data.DatabaseHelper
-import com.pmu.mobileapp.data.repository.DefaultPodcastRepository
+import com.pmu.mobileapp.data.AppContainer
 import com.pmu.mobileapp.data.repository.PodcastRepository
 import com.pmu.mobileapp.player.ExoPodcastPlayer
 import com.pmu.mobileapp.player.PlaybackStatus
@@ -16,6 +15,9 @@ import kotlinx.coroutines.cancel
 import kotlinx.coroutines.launch
 
 class CuraLoomApp : Application() {
+    lateinit var appContainer: AppContainer
+        private set
+
     lateinit var podcastRepository: PodcastRepository
         private set
 
@@ -28,13 +30,8 @@ class CuraLoomApp : Application() {
     override fun onCreate() {
         super.onCreate()
         ThemeHelper.applySavedTheme(this)
-        val dbHelper = DatabaseHelper.getInstance(this)
-        podcastRepository = DefaultPodcastRepository(
-            dbHelper = dbHelper,
-            feedService = dbHelper.feedService,
-            episodeService = dbHelper.episodeService,
-            libraryService = dbHelper.libraryService
-        )
+        appContainer = AppContainer(this)
+        podcastRepository = appContainer.podcastRepository
         podcastPlayer = ExoPodcastPlayer(this)
         startPlaybackProgressSync()
     }

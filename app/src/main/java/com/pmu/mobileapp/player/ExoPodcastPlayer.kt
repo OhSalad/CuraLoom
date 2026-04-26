@@ -3,10 +3,12 @@ package com.pmu.mobileapp.player
 import android.content.Context
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.OptIn
 import androidx.media3.common.AudioAttributes
 import androidx.media3.common.MediaItem
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.DefaultHttpDataSource
 import androidx.media3.exoplayer.ExoPlayer
 import androidx.media3.exoplayer.source.DefaultMediaSourceFactory
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
+@OptIn(UnstableApi::class)
 class ExoPodcastPlayer(context: Context) : PodcastPlayer {
     private val httpDataSourceFactory = DefaultHttpDataSource.Factory()
         .setUserAgent("CuraLoom/1.0")

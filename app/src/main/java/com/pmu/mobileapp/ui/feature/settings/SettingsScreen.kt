@@ -16,7 +16,6 @@ import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -94,27 +93,8 @@ fun SettingsScreen(
                     Toast.LENGTH_SHORT
                 ).show()
             }
-            ToggleRow(
-                stringResource(R.string.new_episode_alerts),
-                stringResource(R.string.new_episode_alerts_caption),
-                state.newEpisodesEnabled
-            ) {
-                vm.toggleNewEpisodes(it)
-                Toast.makeText(context, context.getString(R.string.setting_updated), Toast.LENGTH_SHORT).show()
-            }
-            ToggleRow(
-                stringResource(R.string.personalized_picks),
-                stringResource(R.string.personalized_picks_caption),
-                state.personalizedEnabled
-            ) {
-                vm.togglePersonalized(it)
-                Toast.makeText(context, context.getString(R.string.setting_updated), Toast.LENGTH_SHORT).show()
-            }
             Text(stringResource(R.string.storage), fontWeight = FontWeight.SemiBold)
             Text(stringResource(R.string.storage_info, state.feedCount))
-            Button(onClick = { Toast.makeText(context, context.getString(R.string.manage_downloads_msg), Toast.LENGTH_SHORT).show() }) {
-                Text(stringResource(R.string.manage_downloads))
-            }
         }
     }
 }

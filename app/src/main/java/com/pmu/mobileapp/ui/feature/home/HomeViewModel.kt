@@ -7,7 +7,6 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
 import com.pmu.mobileapp.CuraLoomApp
-import com.pmu.mobileapp.data.DatabaseHelper
 import com.pmu.mobileapp.model.Feed
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -25,8 +24,9 @@ data class HomeUiState(
 )
 
 class HomeViewModel(application: Application) : AndroidViewModel(application) {
-    private val feedService = DatabaseHelper.getInstance(application).feedService
-    private val repository = (application as CuraLoomApp).podcastRepository
+    private val app = application as CuraLoomApp
+    private val feedService = app.appContainer.feedService
+    private val repository = app.podcastRepository
 
     var uiState by mutableStateOf(HomeUiState())
         private set

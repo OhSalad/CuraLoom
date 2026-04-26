@@ -11,8 +11,8 @@ import com.pmu.mobileapp.player.PlaybackState
 import kotlinx.coroutines.flow.StateFlow
 
 private const val LIBRARY_FILTER_ALL = "ALL"
+private const val LIBRARY_FILTER_PLAYED = "PLAYED"
 private const val LIBRARY_FILTER_UNPLAYED = "UNPLAYED"
-private const val LIBRARY_FILTER_DOWNLOADED = "DOWNLOADED"
 
 data class LibraryUiState(
     val filter: String = LIBRARY_FILTER_ALL,
@@ -78,8 +78,8 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
     private fun reload() {
         val all = repository.getLibraryEpisodes()
         val filtered = when (uiState.filter) {
+            LIBRARY_FILTER_PLAYED -> all.filter { it.isPlayed }
             LIBRARY_FILTER_UNPLAYED -> all.filter { !it.isPlayed }
-            LIBRARY_FILTER_DOWNLOADED -> all.filter { it.isDownloaded }
             else -> all
         }
         uiState = uiState.copy(episodes = filtered)
@@ -88,6 +88,6 @@ class LibraryViewModel(application: Application) : AndroidViewModel(application)
 
 internal object LibraryFilters {
     const val All = LIBRARY_FILTER_ALL
+    const val Played = LIBRARY_FILTER_PLAYED
     const val Unplayed = LIBRARY_FILTER_UNPLAYED
-    const val Downloaded = LIBRARY_FILTER_DOWNLOADED
 }

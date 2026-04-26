@@ -10,6 +10,5 @@ data class LibraryEpisode(
     val audioUrl: String?,
     val lastPositionMs: Long,
     val isPlayed: Boolean,
-    val isDownloaded: Boolean,
     val isNew: Boolean
 )

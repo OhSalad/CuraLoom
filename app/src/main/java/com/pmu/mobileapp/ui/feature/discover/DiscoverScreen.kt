@@ -36,6 +36,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.pmu.mobileapp.CuraLoomApp
 import com.pmu.mobileapp.R
 import com.pmu.mobileapp.data.DefaultPodcastFeed
 
@@ -83,10 +84,8 @@ fun DiscoverScreen(
                         isSyncing = isSyncing,
                         onFollow = { vm.follow(feed) },
                         onOpenFeed = {
-                            val followedFeed = com.pmu.mobileapp.data.DatabaseHelper
-                                .getInstance(context)
-                                .feedService
-                                .getFeedByUrl(feed.url)
+                            val app = context.applicationContext as CuraLoomApp
+                            val followedFeed = app.appContainer.feedService.getFeedByUrl(feed.url)
                             if (followedFeed != null) onOpenFeed(followedFeed.id)
                         }
                     )
@@ -118,8 +117,8 @@ private fun DiscoverFeedCard(
                 Button(onClick = onFollow, enabled = !isFollowed && !isSyncing) {
                     Text(
                         when {
-                            isSyncing -> stringResource(R.string.following_syncing)
                             isFollowed -> stringResource(R.string.following)
+                            isSyncing -> stringResource(R.string.following_syncing)
                             else -> stringResource(R.string.follow)
                         }
                     )

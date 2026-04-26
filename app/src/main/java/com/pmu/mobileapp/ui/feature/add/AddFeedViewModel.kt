@@ -5,7 +5,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.AndroidViewModel
-import com.pmu.mobileapp.data.DatabaseHelper
+import com.pmu.mobileapp.CuraLoomApp
 import com.pmu.mobileapp.model.Feed
 import com.pmu.mobileapp.ui.common.titleFromUrl
 import java.net.URI
@@ -34,7 +34,7 @@ data class AddFeedUiState(
 )
 
 class AddFeedViewModel(application: Application) : AndroidViewModel(application) {
-    private val feedService = DatabaseHelper.getInstance(application).feedService
+    private val feedService = (application as CuraLoomApp).appContainer.feedService
 
     var uiState by mutableStateOf(AddFeedUiState())
         private set

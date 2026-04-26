@@ -112,7 +112,7 @@ class EpisodeViewModel(application: Application) : AndroidViewModel(application)
         val all = repository.getEpisodesByFeedId(feedId)
         val episodes = when (uiState.filter) {
             FILTER_UNPLAYED -> all.filter { !it.isPlayed }
-            FILTER_POPULAR -> all.filter { it.isDownloaded || it.isNew }
+            FILTER_POPULAR -> all.filter { it.isNew }
             else -> all
         }
         uiState = uiState.copy(episodes = episodes)

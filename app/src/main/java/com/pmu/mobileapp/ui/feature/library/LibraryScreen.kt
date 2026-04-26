@@ -64,8 +64,8 @@ fun LibraryScreen(
         Column(Modifier.padding(padding).padding(16.dp)) {
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 FilterChip(selected = state.filter == LibraryFilters.All, onClick = { vm.setFilter(LibraryFilters.All) }, label = { Text(stringResource(R.string.filter_all)) })
+                FilterChip(selected = state.filter == LibraryFilters.Played, onClick = { vm.setFilter(LibraryFilters.Played) }, label = { Text(stringResource(R.string.filter_played)) })
                 FilterChip(selected = state.filter == LibraryFilters.Unplayed, onClick = { vm.setFilter(LibraryFilters.Unplayed) }, label = { Text(stringResource(R.string.filter_unplayed)) })
-                FilterChip(selected = state.filter == LibraryFilters.Downloaded, onClick = { vm.setFilter(LibraryFilters.Downloaded) }, label = { Text(stringResource(R.string.filter_downloaded)) })
             }
             Spacer(Modifier.height(10.dp))
             if (state.episodes.isEmpty()) {

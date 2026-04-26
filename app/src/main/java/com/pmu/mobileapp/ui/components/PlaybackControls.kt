@@ -27,6 +27,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.pmu.mobileapp.R
 import com.pmu.mobileapp.player.PlaybackStatus
+import java.util.Locale
 
 @Composable
 fun PlaybackControls(
@@ -110,8 +111,8 @@ private fun formatTime(ms: Long): String {
     val minutes = (totalSeconds % 3600L) / 60L
     val seconds = totalSeconds % 60L
     return if (hours > 0) {
-        String.format("%d:%02d:%02d", hours, minutes, seconds)
+        String.format(Locale.ROOT, "%d:%02d:%02d", hours, minutes, seconds)
     } else {
-        String.format("%02d:%02d", minutes, seconds)
+        String.format(Locale.ROOT, "%02d:%02d", minutes, seconds)
     }
 }

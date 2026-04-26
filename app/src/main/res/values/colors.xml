@@ -2,27 +2,14 @@
 <resources>
     <color name="primary">#2E4EDC</color>
     <color name="primary_variant">#1B3FCF</color>
-    <color name="primary_container">#DEE1FF</color>
     <color name="primary_fixed_dim">#CCD2FF</color>
-    <color name="secondary">#595F6D</color>
-    <color name="secondary_container">#DDE2F3</color>
     <color name="tertiary">#006B63</color>
     <color name="tertiary_container">#77FEEE</color>
     <color name="background">#F8F9FA</color>
     <color name="surface">#F8F9FA</color>
-    <color name="surface_dim">#D1DCE0</color>
-    <color name="surface_variant">#DBE4E7</color>
     <color name="surface_container_lowest">#FFFFFF</color>
-    <color name="surface_container_low">#F1F4F6</color>
-    <color name="surface_container">#EAEFF1</color>
-    <color name="surface_container_high">#E3E9EC</color>
-    <color name="surface_container_highest">#DBE4E7</color>
     <color name="on_surface">#2B3437</color>
-    <color name="on_surface_variant">#586064</color>
-    <color name="outline">#737C7F</color>
-    <color name="outline_variant">#ABB3B7</color>
     <color name="error">#9F403D</color>
-    <color name="on_error">#FFF7F6</color>
     <color name="white">#FFFFFFFF</color>
     <color name="black">#FF000000</color>
 </resources>

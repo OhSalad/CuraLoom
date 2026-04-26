@@ -1,5 +1,5 @@
 // Use DBML to define your database structure
-// Source: app/src/main/java/com/pmu/mobileapp/data/DatabaseHelper.kt
+// Source: app/src/main/java/com/pmu/mobileapp/data/CuraLoomDatabase.kt
 
 Table feeds {
   id integer [pk, increment]
@@ -23,7 +23,6 @@ Table episodes {
   duration text
   audio_url text
   is_played integer [default: 0, note: 'Stored as 0/1']
-  is_downloaded integer [default: 0, note: 'Stored as 0/1']
   is_new integer [default: 1, note: 'Stored as 0/1']
   last_position_ms integer [default: 0]
 }

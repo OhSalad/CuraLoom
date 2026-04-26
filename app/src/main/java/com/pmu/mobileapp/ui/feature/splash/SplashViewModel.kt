@@ -21,11 +21,10 @@ class SplashViewModel : ViewModel() {
     private fun startProgress() {
         viewModelScope.launch {
             while (progress < 100) {
-                progress += if (progress < 30) 3 else if (progress < 70) 2 else 1
+                progress += 1
                 if (progress > 100) progress = 100
-                delay(45)
+                delay(50)
             }
-            delay(250)
             done = 1
         }
     }

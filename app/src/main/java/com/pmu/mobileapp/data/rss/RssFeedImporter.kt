@@ -10,7 +10,6 @@ import org.w3c.dom.Element
 import org.w3c.dom.Node
 
 data class ImportedFeedData(
-    val resolvedUrl: String,
     val title: String?,
     val description: String?,
     val author: String?,
@@ -22,12 +21,11 @@ object RssFeedImporter {
     private const val READ_TIMEOUT_MS = 20000
 
     fun import(feedId: Long, feedUrl: String): ImportedFeedData {
-        val first = download(feedUrl)
+        val first = fetch(feedUrl)
         val rssUrl = discoverRssUrl(first, feedUrl)
-        val xmlResponse = if (rssUrl == first.finalUrl) first else download(rssUrl)
+        val xmlResponse = if (rssUrl == first.finalUrl) first else fetch(rssUrl)
         val parsed = parseFeedXml(xmlResponse.body, feedId, xmlResponse.finalUrl)
         return ImportedFeedData(
-            resolvedUrl = xmlResponse.finalUrl,
             title = parsed.title,
             description = parsed.description,
             author = parsed.author,
@@ -85,7 +83,7 @@ object RssFeedImporter {
         }
     }
 
-    private fun download(url: String): HttpPayload {
+    private fun fetch(url: String): HttpPayload {
         val connection = (URL(url).openConnection() as HttpURLConnection).apply {
             instanceFollowRedirects = true
             connectTimeout = CONNECT_TIMEOUT_MS
