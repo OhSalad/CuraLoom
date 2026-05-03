@@ -4,6 +4,12 @@ import android.content.Context
 import androidx.room.Room
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.pmu.mobileapp.BuildConfig
+import com.pmu.mobileapp.data.ai.DefaultAiEpisodeCatalogProvider
+import com.pmu.mobileapp.data.ai.GeminiPodcastAiService
+import com.pmu.mobileapp.data.ai.GoogleGenAiJsonClient
+import com.pmu.mobileapp.data.ai.PodcastAiConstants
+import com.pmu.mobileapp.data.ai.PodcastAiService
 import com.pmu.mobileapp.data.entity.FeedEntity
 import com.pmu.mobileapp.data.repository.DefaultPodcastRepository
 import com.pmu.mobileapp.data.repository.PodcastRepository
@@ -30,6 +36,17 @@ class AppContainer(context: Context) {
         feedService = feedService,
         episodeService = episodeService,
         libraryService = libraryService
+    )
+
+    val podcastAiService: PodcastAiService = GeminiPodcastAiService(
+        jsonClient = GoogleGenAiJsonClient(
+            apiKey = BuildConfig.GEMINI_API_KEY,
+            modelName = BuildConfig.GEMINI_MODEL.ifBlank { PodcastAiConstants.DEFAULT_MODEL }
+        ),
+        episodeCatalogProvider = DefaultAiEpisodeCatalogProvider(
+            feedService = feedService,
+            repository = podcastRepository
+        )
     )
 
     init {

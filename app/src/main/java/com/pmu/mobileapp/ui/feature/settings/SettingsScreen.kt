@@ -12,15 +12,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -36,6 +30,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pmu.mobileapp.R
+import com.pmu.mobileapp.ui.components.PrimaryBottomNav
+import com.pmu.mobileapp.ui.components.PrimaryNavItem
 import com.pmu.mobileapp.ui.components.ToggleRow
 import com.pmu.mobileapp.util.LocaleHelper
 
@@ -48,6 +44,7 @@ fun SettingsScreen(
     onGoHome: () -> Unit,
     onOpenDiscover: () -> Unit,
     onOpenLibrary: () -> Unit,
+    onOpenAi: () -> Unit,
     vm: SettingsViewModel = viewModel()
     ) {
         val context = LocalContext.current
@@ -62,12 +59,14 @@ fun SettingsScreen(
             )
         },
         bottomBar = {
-            NavigationBar {
-                NavigationBarItem(selected = false, onClick = onGoHome, icon = { Icon(Icons.Default.Home, null) }, label = { Text(stringResource(R.string.home)) })
-                NavigationBarItem(selected = false, onClick = onOpenDiscover, icon = { Icon(Icons.Default.PlayArrow, null) }, label = { Text(stringResource(R.string.discover)) })
-                NavigationBarItem(selected = false, onClick = onOpenLibrary, icon = { Icon(Icons.Default.LibraryMusic, null) }, label = { Text(stringResource(R.string.manage_library)) })
-                NavigationBarItem(selected = true, onClick = {}, icon = { Icon(Icons.Default.Settings, null) }, label = { Text(stringResource(R.string.settings)) })
-            }
+            PrimaryBottomNav(
+                selectedItem = PrimaryNavItem.Settings,
+                onGoHome = onGoHome,
+                onOpenDiscover = onOpenDiscover,
+                onOpenAi = onOpenAi,
+                onOpenLibrary = onOpenLibrary,
+                onOpenSettings = {}
+            )
         }
     ) { padding ->
         Column(

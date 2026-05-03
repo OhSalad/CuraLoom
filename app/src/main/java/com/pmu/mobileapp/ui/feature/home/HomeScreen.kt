@@ -16,10 +16,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryMusic
-import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,8 +23,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -47,6 +41,8 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pmu.mobileapp.R
 import com.pmu.mobileapp.model.Feed
+import com.pmu.mobileapp.ui.components.PrimaryBottomNav
+import com.pmu.mobileapp.ui.components.PrimaryNavItem
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
@@ -56,6 +52,7 @@ fun HomeScreen(
     onOpenLibrary: () -> Unit,
     onOpenSettings: () -> Unit,
     onOpenDiscover: () -> Unit,
+    onOpenAi: () -> Unit,
     vm: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -84,10 +81,13 @@ fun HomeScreen(
     Scaffold(
         topBar = { TopAppBar(title = { Text(stringResource(R.string.library_heading)) }) },
         bottomBar = {
-            HomeBottomBar(
+            PrimaryBottomNav(
+                selectedItem = PrimaryNavItem.Home,
+                onGoHome = {},
+                onOpenDiscover = onOpenDiscover,
+                onOpenAi = onOpenAi,
                 onOpenLibrary = onOpenLibrary,
-                onOpenSettings = onOpenSettings,
-                onDiscover = onOpenDiscover
+                onOpenSettings = onOpenSettings
             )
         },
         floatingActionButton = { IconButton(onClick = onAddFeed) { Icon(Icons.Default.Add, stringResource(R.string.add_feed_title)) } }
@@ -129,16 +129,6 @@ private fun RenameFeedDialog(
         confirmButton = { TextButton(onClick = onConfirm) { Text(stringResource(R.string.add)) } },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } }
     )
-}
-
-@Composable
-private fun HomeBottomBar(onOpenLibrary: () -> Unit, onOpenSettings: () -> Unit, onDiscover: () -> Unit) {
-    NavigationBar {
-        NavigationBarItem(selected = true, onClick = {}, icon = { Icon(Icons.Default.Home, null) }, label = { Text(stringResource(R.string.home)) })
-        NavigationBarItem(selected = false, onClick = onDiscover, icon = { Icon(Icons.Default.PlayArrow, null) }, label = { Text(stringResource(R.string.discover)) })
-        NavigationBarItem(selected = false, onClick = onOpenLibrary, icon = { Icon(Icons.Default.LibraryMusic, null) }, label = { Text(stringResource(R.string.manage_library)) })
-        NavigationBarItem(selected = false, onClick = onOpenSettings, icon = { Icon(Icons.Default.Settings, null) }, label = { Text(stringResource(R.string.settings)) })
-    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)

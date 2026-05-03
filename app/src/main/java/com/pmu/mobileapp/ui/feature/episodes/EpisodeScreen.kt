@@ -15,11 +15,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.LibraryMusic
 import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
-import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -27,8 +24,6 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.NavigationBar
-import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -46,6 +41,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.pmu.mobileapp.R
 import com.pmu.mobileapp.model.Episode
 import com.pmu.mobileapp.player.PlaybackStatus
+import com.pmu.mobileapp.ui.components.PrimaryBottomNav
+import com.pmu.mobileapp.ui.components.PrimaryNavItem
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -56,6 +53,7 @@ fun EpisodeScreen(
     onGoHome: () -> Unit,
     onOpenDiscover: () -> Unit,
     onOpenLibrary: () -> Unit,
+    onOpenAi: () -> Unit,
     vm: EpisodeViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -101,12 +99,14 @@ fun EpisodeScreen(
             )
         },
         bottomBar = {
-            NavigationBar {
-                NavigationBarItem(selected = false, onClick = onGoHome, icon = { Icon(Icons.Default.Home, null) }, label = { Text(stringResource(R.string.home)) })
-                NavigationBarItem(selected = false, onClick = onOpenDiscover, icon = { Icon(Icons.Default.PlayArrow, null) }, label = { Text(stringResource(R.string.discover)) })
-                NavigationBarItem(selected = true, onClick = onOpenLibrary, icon = { Icon(Icons.Default.LibraryMusic, null) }, label = { Text(stringResource(R.string.manage_library)) })
-                NavigationBarItem(selected = false, onClick = onOpenSettings, icon = { Icon(Icons.Default.Settings, null) }, label = { Text(stringResource(R.string.settings)) })
-            }
+            PrimaryBottomNav(
+                selectedItem = PrimaryNavItem.Library,
+                onGoHome = onGoHome,
+                onOpenDiscover = onOpenDiscover,
+                onOpenAi = onOpenAi,
+                onOpenLibrary = onOpenLibrary,
+                onOpenSettings = onOpenSettings
+            )
         }
     ) { padding ->
         EpisodeContent(

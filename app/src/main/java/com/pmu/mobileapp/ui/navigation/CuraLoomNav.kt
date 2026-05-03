@@ -17,6 +17,7 @@ import androidx.navigation.navArgument
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pmu.mobileapp.CuraLoomApp
 import com.pmu.mobileapp.ui.feature.add.AddFeedScreen
+import com.pmu.mobileapp.ui.feature.ai.AiScreen
 import com.pmu.mobileapp.ui.feature.discover.DiscoverScreen
 import com.pmu.mobileapp.ui.feature.episodes.EpisodeScreen
 import com.pmu.mobileapp.ui.feature.home.HomeScreen
@@ -29,6 +30,7 @@ private object Routes {
     const val Splash = "splash"
     const val Home = "home"
     const val Discover = "discover"
+    const val Ai = "ai"
     const val Add = "add"
     const val Library = "library"
     const val Settings = "settings"
@@ -48,6 +50,7 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
     val hasBottomNavigation = currentRoute in setOf(
         Routes.Home,
         Routes.Discover,
+        Routes.Ai,
         Routes.Library,
         Routes.Settings,
         Routes.Episodes
@@ -66,12 +69,23 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
                     onOpenFeed = { nav.navigate(Routes.episodes(it)) },
                     onOpenLibrary = { nav.navigate(Routes.Library) },
                     onOpenSettings = { nav.navigate(Routes.Settings) },
-                    onOpenDiscover = { nav.navigate(Routes.Discover) }
+                    onOpenDiscover = { nav.navigate(Routes.Discover) },
+                    onOpenAi = { nav.navigate(Routes.Ai) }
                 )
             }
             composable(Routes.Discover) {
                 DiscoverScreen(
                     onGoHome = { nav.navigate(Routes.Home) },
+                    onOpenLibrary = { nav.navigate(Routes.Library) },
+                    onOpenSettings = { nav.navigate(Routes.Settings) },
+                    onOpenAi = { nav.navigate(Routes.Ai) },
+                    onOpenFeed = { nav.navigate(Routes.episodes(it)) }
+                )
+            }
+            composable(Routes.Ai) {
+                AiScreen(
+                    onGoHome = { nav.navigate(Routes.Home) },
+                    onOpenDiscover = { nav.navigate(Routes.Discover) },
                     onOpenLibrary = { nav.navigate(Routes.Library) },
                     onOpenSettings = { nav.navigate(Routes.Settings) },
                     onOpenFeed = { nav.navigate(Routes.episodes(it)) }
@@ -82,6 +96,7 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
                     onGoHome = { nav.navigate(Routes.Home) },
                     onOpenDiscover = { nav.navigate(Routes.Discover) },
                     onOpenSettings = { nav.navigate(Routes.Settings) },
+                    onOpenAi = { nav.navigate(Routes.Ai) },
                     onOpenFeed = { nav.navigate(Routes.episodes(it)) }
                 )
             }
@@ -95,7 +110,8 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
                     onBack = { nav.popBackStack() },
                     onGoHome = { nav.navigate(Routes.Home) },
                     onOpenDiscover = { nav.navigate(Routes.Discover) },
-                    onOpenLibrary = { nav.navigate(Routes.Library) }
+                    onOpenLibrary = { nav.navigate(Routes.Library) },
+                    onOpenAi = { nav.navigate(Routes.Ai) }
                 )
             }
             composable(
@@ -108,7 +124,8 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
                     onOpenSettings = { nav.navigate(Routes.Settings) },
                     onGoHome = { nav.navigate(Routes.Home) },
                     onOpenDiscover = { nav.navigate(Routes.Discover) },
-                    onOpenLibrary = { nav.navigate(Routes.Library) }
+                    onOpenLibrary = { nav.navigate(Routes.Library) },
+                    onOpenAi = { nav.navigate(Routes.Ai) }
                 )
             }
         }
