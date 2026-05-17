@@ -16,7 +16,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun ToggleRow(title: String, subtitle: String, checked: Boolean, onCheckedChange: (Boolean) -> Unit) {
-    Card(Modifier.fillMaxWidth()) {
+    Card(
+        onClick = { onCheckedChange(!checked) },
+        modifier = Modifier.fillMaxWidth()
+    ) {
         Row(
             Modifier
                 .fillMaxWidth()

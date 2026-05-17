@@ -64,12 +64,14 @@ fun MiniNowPlayingBar(
     } else {
         playback.positionMs
     }
+    val containerColor = MaterialTheme.colorScheme.secondaryContainer
+    val contentColor = MaterialTheme.colorScheme.onSecondaryContainer
 
     Card(
         modifier = modifier.fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
+            containerColor = containerColor,
+            contentColor = contentColor
         ),
         elevation = CardDefaults.cardElevation(defaultElevation = 8.dp)
     ) {
@@ -86,7 +88,7 @@ fun MiniNowPlayingBar(
                     Text(
                         text = stringResource(R.string.now_playing_title),
                         style = MaterialTheme.typography.labelSmall,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.72f)
+                        color = contentColor.copy(alpha = 0.72f)
                     )
                     Text(
                         text = playback.episodeTitle,
@@ -97,7 +99,7 @@ fun MiniNowPlayingBar(
                     Text(
                         text = playback.feedTitle,
                         style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.78f),
+                        color = contentColor.copy(alpha = 0.78f),
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis
                     )
@@ -130,10 +132,10 @@ fun MiniNowPlayingBar(
                     activeTrackColor = MaterialTheme.colorScheme.primary,
                     activeTickColor = MaterialTheme.colorScheme.primary,
                     thumbColor = MaterialTheme.colorScheme.primary,
-                    inactiveTrackColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.28f),
-                    disabledActiveTrackColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.36f),
-                    disabledInactiveTrackColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.18f),
-                    disabledThumbColor = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.48f)
+                    inactiveTrackColor = contentColor.copy(alpha = 0.28f),
+                    disabledActiveTrackColor = contentColor.copy(alpha = 0.36f),
+                    disabledInactiveTrackColor = contentColor.copy(alpha = 0.18f),
+                    disabledThumbColor = contentColor.copy(alpha = 0.48f)
                 )
             )
             Row(
@@ -144,7 +146,7 @@ fun MiniNowPlayingBar(
                 Text(
                     text = "${formatPlaybackTime(sliderPositionMs)} / ${if (hasDuration) formatPlaybackTime(playback.durationMs) else "--:--"}",
                     style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.78f)
+                    color = contentColor.copy(alpha = 0.78f)
                 )
                 Row {
                     IconButton(modifier = Modifier.size(36.dp), onClick = onDecreaseVolume) {

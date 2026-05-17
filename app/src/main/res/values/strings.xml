@@ -72,6 +72,8 @@
     <string name="settings_subtitle">Control language, appearance, and your library summary.</string>
     <string name="dark_mode">Dark mode</string>
     <string name="dark_mode_caption">Switch between light and dark appearance.</string>
+    <string name="material_you_colors">Material You colors</string>
+    <string name="material_you_colors_caption">Use your device wallpaper colors across the app.</string>
     <string name="language">Language</string>
     <string name="language_switch_to_english">Tap to switch to English</string>
     <string name="language_switch_to_arabic">Tap to switch to Arabic</string>

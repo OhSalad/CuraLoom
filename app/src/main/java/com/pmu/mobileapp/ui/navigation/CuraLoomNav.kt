@@ -53,7 +53,12 @@ private object Routes {
 }
 
 @Composable
-fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
+fun CuraLoomNav(
+    darkMode: Boolean,
+    materialYouColors: Boolean,
+    onDarkModeChange: (Boolean) -> Unit,
+    onMaterialYouColorsChange: (Boolean) -> Unit
+) {
     val nav = rememberNavController()
     val context = LocalContext.current
     val app = context.applicationContext as CuraLoomApp
@@ -126,7 +131,9 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
             composable(Routes.Settings) {
                 SettingsScreen(
                     darkMode = darkMode,
+                    materialYouColors = materialYouColors,
                     onDarkModeChange = onDarkModeChange,
+                    onMaterialYouColorsChange = onMaterialYouColorsChange,
                     onBack = { nav.popBackStack() },
                     onGoHome = { nav.navigate(Routes.Home) },
                     onOpenDiscover = { nav.navigate(Routes.Discover) },

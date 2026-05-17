@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatDelegate
 object ThemeHelper {
     private const val PREFS_NAME = "curaloom_prefs"
     private const val KEY_DARK_MODE = "dark_mode_enabled"
+    private const val KEY_MATERIAL_YOU_COLORS = "colorful_player_enabled"
 
     fun applySavedTheme(context: Context) {
         AppCompatDelegate.setDefaultNightMode(
@@ -25,5 +26,15 @@ object ThemeHelper {
         AppCompatDelegate.setDefaultNightMode(
             if (enabled) AppCompatDelegate.MODE_NIGHT_YES else AppCompatDelegate.MODE_NIGHT_NO
         )
+    }
+
+    fun isMaterialYouColorsEnabled(context: Context): Boolean {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        return prefs.getBoolean(KEY_MATERIAL_YOU_COLORS, true)
+    }
+
+    fun setMaterialYouColorsEnabled(context: Context, enabled: Boolean) {
+        val prefs = context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
+        prefs.edit().putBoolean(KEY_MATERIAL_YOU_COLORS, enabled).apply()
     }
 }

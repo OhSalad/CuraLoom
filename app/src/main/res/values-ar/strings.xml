@@ -72,6 +72,8 @@
     <string name="settings_subtitle">تحكم في اللغة والمظهر وملخص مكتبتك.</string>
     <string name="dark_mode">الوضع الداكن</string>
     <string name="dark_mode_caption">تبديل بصري تجريبي للاستماع الليلي.</string>
+    <string name="material_you_colors">ألوان Material You</string>
+    <string name="material_you_colors_caption">استخدم ألوان خلفية الجهاز في التطبيق.</string>
     <string name="language">اللغة</string>
     <string name="language_switch_to_english">اضغط للتبديل إلى الإنجليزية</string>
     <string name="language_switch_to_arabic">اضغط للتبديل إلى العربية</string>

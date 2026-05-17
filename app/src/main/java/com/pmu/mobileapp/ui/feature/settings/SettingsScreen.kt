@@ -39,7 +39,9 @@ import com.pmu.mobileapp.util.LocaleHelper
 @Composable
 fun SettingsScreen(
     darkMode: Boolean,
+    materialYouColors: Boolean,
     onDarkModeChange: (Boolean) -> Unit,
+    onMaterialYouColorsChange: (Boolean) -> Unit,
     onBack: () -> Unit,
     onGoHome: () -> Unit,
     onOpenDiscover: () -> Unit,
@@ -92,6 +94,12 @@ fun SettingsScreen(
                     Toast.LENGTH_SHORT
                 ).show()
             }
+            ToggleRow(
+                stringResource(R.string.material_you_colors),
+                stringResource(R.string.material_you_colors_caption),
+                materialYouColors,
+                onMaterialYouColorsChange
+            )
             Text(stringResource(R.string.storage), fontWeight = FontWeight.SemiBold)
             Text(stringResource(R.string.storage_info, state.feedCount))
         }
