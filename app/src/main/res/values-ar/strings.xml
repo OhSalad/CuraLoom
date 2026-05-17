@@ -36,6 +36,8 @@
     <string name="share_via">مشاركة عبر</string>
     <string name="now_playing">يتم الآن تشغيل: %1$s</string>
     <string name="now_playing_title">يتم التشغيل الآن</string>
+    <string name="dismiss_now_playing">إغلاق شريط التشغيل الحالي</string>
+    <string name="show_now_playing">المشغل</string>
     <string name="no_audio">لا يوجد صوت</string>
     <string name="no_audio_available">لا يحتوي هذا العنصر من RSS على صوت قابل للتشغيل.</string>
     <string name="episodes_count">%1$d حلقة</string>

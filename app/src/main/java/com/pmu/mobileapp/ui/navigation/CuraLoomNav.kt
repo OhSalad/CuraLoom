@@ -3,10 +3,22 @@ package com.pmu.mobileapp.ui.navigation
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavType
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -16,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.pmu.mobileapp.CuraLoomApp
+import com.pmu.mobileapp.R
 import com.pmu.mobileapp.ui.feature.add.AddFeedScreen
 import com.pmu.mobileapp.ui.feature.ai.AiScreen
 import com.pmu.mobileapp.ui.feature.discover.DiscoverScreen
@@ -45,6 +58,7 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
     val context = LocalContext.current
     val app = context.applicationContext as CuraLoomApp
     val playback = app.podcastPlayer.playbackState.collectAsStateWithLifecycle().value
+    var dismissedEpisodeId by rememberSaveable { mutableStateOf<Long?>(null) }
     val backStackEntry = nav.currentBackStackEntryAsState().value
     val currentRoute = backStackEntry?.destination?.route
     val hasBottomNavigation = currentRoute in setOf(
@@ -55,6 +69,12 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
         Routes.Settings,
         Routes.Episodes
     )
+
+    LaunchedEffect(playback.episodeId) {
+        if (playback.episodeId == null) {
+            dismissedEpisodeId = null
+        }
+    }
 
     Box(Modifier.fillMaxSize()) {
         NavHost(navController = nav, startDestination = Routes.Splash) {
@@ -130,11 +150,12 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
             }
         }
 
-        if (playback.episodeId != null && currentRoute != Routes.Splash) {
+        if (playback.episodeId != null && playback.episodeId != dismissedEpisodeId && currentRoute != Routes.Splash) {
             MiniNowPlayingBar(
                 modifier = Modifier
                     .align(Alignment.BottomCenter)
-                    .padding(horizontal = 12.dp, vertical = if (hasBottomNavigation) 108.dp else 12.dp),
+                    .padding(horizontal = 12.dp)
+                    .padding(bottom = if (hasBottomNavigation) 96.dp else 12.dp),
                 playback = playback,
                 onOpenLibrary = {
                     nav.navigate(Routes.Library) {
@@ -145,7 +166,25 @@ fun CuraLoomNav(darkMode: Boolean, onDarkModeChange: (Boolean) -> Unit) {
                 onSeekTo = { app.podcastPlayer.seekTo(it) },
                 onToggleMute = { app.podcastPlayer.toggleMute() },
                 onDecreaseVolume = { app.podcastPlayer.decreaseVolume() },
-                onIncreaseVolume = { app.podcastPlayer.increaseVolume() }
+                onIncreaseVolume = { app.podcastPlayer.increaseVolume() },
+                onDismiss = { dismissedEpisodeId = playback.episodeId }
+            )
+        } else if (playback.episodeId != null && currentRoute != Routes.Splash) {
+            ExtendedFloatingActionButton(
+                modifier = Modifier
+                    .align(Alignment.BottomStart)
+                    .padding(start = 16.dp)
+                    .padding(bottom = if (hasBottomNavigation) 96.dp else 16.dp),
+                onClick = { dismissedEpisodeId = null },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary,
+                icon = {
+                    Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = null
+                    )
+                },
+                text = { Text(stringResource(R.string.show_now_playing)) }
             )
         }
     }

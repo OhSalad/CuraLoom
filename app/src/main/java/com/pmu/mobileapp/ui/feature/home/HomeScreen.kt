@@ -20,8 +20,8 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilterChip
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -90,7 +90,15 @@ fun HomeScreen(
                 onOpenSettings = onOpenSettings
             )
         },
-        floatingActionButton = { IconButton(onClick = onAddFeed) { Icon(Icons.Default.Add, stringResource(R.string.add_feed_title)) } }
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = onAddFeed,
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                Icon(Icons.Default.Add, stringResource(R.string.add_feed_title))
+            }
+        }
     ) { padding ->
         HomeContent(
             modifier = Modifier.padding(padding),

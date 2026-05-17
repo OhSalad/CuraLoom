@@ -36,6 +36,8 @@
     <string name="share_via">Share via</string>
     <string name="now_playing">Now playing: %1$s</string>
     <string name="now_playing_title">Now Playing</string>
+    <string name="dismiss_now_playing">Dismiss now playing</string>
+    <string name="show_now_playing">Player</string>
     <string name="no_audio">No audio</string>
     <string name="no_audio_available">This RSS item does not include playable audio.</string>
     <string name="episodes_count">%1$d episodes</string>
